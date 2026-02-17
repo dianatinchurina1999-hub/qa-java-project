@@ -17,15 +17,15 @@ public class BurgerPriceParameterizedTest {
     public float bunPrice;
 
     @Parameterized.Parameter(1)
-    public float ing1Price;
+    public float firstIngredientPrice;
 
     @Parameterized.Parameter(2)
-    public float ing2Price;
+    public float secondIngredientPrice;
 
     @Parameterized.Parameter(3)
-    public float expected;
+    public float expectedPrice;
 
-    @Parameterized.Parameters(name = "bun={0}, ing1={1}, ing2={2} -> {3}")
+    @Parameterized.Parameters(name = "bun={0}, first={1}, second={2} -> {3}")
     public static List<Object[]> data() {
         return Arrays.asList(new Object[][]{
                 {100f, 0f, 0f, 200f},
@@ -35,22 +35,23 @@ public class BurgerPriceParameterizedTest {
     }
 
     @Test
-    public void getPrice_shouldReturnBunDoublePlusIngredientsSum() {
+    public void getPriceShouldReturnBunDoublePlusIngredientsSum() {
         Burger burger = new Burger();
 
-        Bun bun = mock(Bun.class);
-        when(bun.getPrice()).thenReturn(bunPrice);
-        burger.setBuns(bun);
+        Bun bunMock = mock(Bun.class);
+        when(bunMock.getPrice()).thenReturn(bunPrice);
+        burger.setBuns(bunMock);
 
-        Ingredient i1 = mock(Ingredient.class);
-        when(i1.getPrice()).thenReturn(ing1Price);
+        Ingredient firstIngredientMock = mock(Ingredient.class);
+        when(firstIngredientMock.getPrice()).thenReturn(firstIngredientPrice);
 
-        Ingredient i2 = mock(Ingredient.class);
-        when(i2.getPrice()).thenReturn(ing2Price);
+        Ingredient secondIngredientMock = mock(Ingredient.class);
+        when(secondIngredientMock.getPrice()).thenReturn(secondIngredientPrice);
 
-        burger.addIngredient(i1);
-        burger.addIngredient(i2);
+        burger.addIngredient(firstIngredientMock);
+        burger.addIngredient(secondIngredientMock);
 
-        assertEquals(expected, burger.getPrice(), 0.0001f);
+        assertEquals(expectedPrice, burger.getPrice(), 0.0001f);
     }
 }
+
