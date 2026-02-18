@@ -2,8 +2,10 @@ package praktikum;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class BurgerTest {
 
@@ -94,21 +96,9 @@ public class BurgerTest {
     }
 
     @Test
-    public void getReceiptShouldContainBunLine() {
+    public void getReceiptShouldReturnFullFormattedReceipt() {
         Burger burger = new Burger();
-        Bun bunMock = mock(Bun.class);
-        when(bunMock.getName()).thenReturn("black bun");
-        when(bunMock.getPrice()).thenReturn(100f);
-        burger.setBuns(bunMock);
 
-        String receipt = burger.getReceipt();
-
-        assertTrue(receipt.contains("(==== black bun ====)"));
-    }
-
-    @Test
-    public void getReceiptShouldContainSauceLine() {
-        Burger burger = new Burger();
         Bun bunMock = mock(Bun.class);
         when(bunMock.getName()).thenReturn("black bun");
         when(bunMock.getPrice()).thenReturn(100f);
@@ -120,57 +110,20 @@ public class BurgerTest {
         when(sauceMock.getPrice()).thenReturn(100f);
         burger.addIngredient(sauceMock);
 
-        String receipt = burger.getReceipt();
-
-        assertTrue(receipt.contains("= sauce hot sauce ="));
-    }
-
-    @Test
-    public void getReceiptShouldContainFillingLine() {
-        Burger burger = new Burger();
-        Bun bunMock = mock(Bun.class);
-        when(bunMock.getName()).thenReturn("black bun");
-        when(bunMock.getPrice()).thenReturn(100f);
-        burger.setBuns(bunMock);
-
         Ingredient fillingMock = mock(Ingredient.class);
         when(fillingMock.getType()).thenReturn(IngredientType.FILLING);
         when(fillingMock.getName()).thenReturn("cutlet");
-        when(fillingMock.getPrice()).thenReturn(100f);
+        when(fillingMock.getPrice()).thenReturn(200f);
         burger.addIngredient(fillingMock);
+        
+        String expectedReceipt =
+                "(==== black bun ====)\r\n" +
+                        "= sauce hot sauce =\r\n" +
+                        "= filling cutlet =\r\n" +
+                        "(==== black bun ====)\r\n" +
+                        "\r\n" +
+                        "Price: 500,000000\r\n";
 
-        String receipt = burger.getReceipt();
-
-        assertTrue(receipt.contains("= filling cutlet ="));
-    }
-
-    @Test
-    public void getReceiptShouldContainPriceLine() {
-        Burger burger = new Burger();
-        Bun bunMock = mock(Bun.class);
-        when(bunMock.getName()).thenReturn("black bun");
-        when(bunMock.getPrice()).thenReturn(100f);
-        burger.setBuns(bunMock);
-
-        String receipt = burger.getReceipt();
-
-        assertTrue(receipt.contains("Price:"));
-    }
-
-    @Test
-    public void getReceiptShouldContainBunTwice() {
-        Burger burger = new Burger();
-        Bun bunMock = mock(Bun.class);
-        when(bunMock.getName()).thenReturn("black bun");
-        when(bunMock.getPrice()).thenReturn(100f);
-        burger.setBuns(bunMock);
-
-        String receipt = burger.getReceipt();
-
-        int first = receipt.indexOf("(==== black bun ====)");
-        int second = receipt.indexOf("(==== black bun ====)", first + 1);
-
-        assertTrue(second > first);
+        assertEquals(expectedReceipt, burger.getReceipt());
     }
 }
-
